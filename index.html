@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>안전한 비밀번호 생성기</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f5f5f5; }
+        .box { border: 2px solid #ccc; padding: 20px; display: inline-block; background: white; border-radius: 8px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>오늘의 비밀번호</h2>
+    <!-- 보안을 위해 처음에는 빈칸으로 둡니다 -->
+    <h1 id="password-display">------</h1>
+    <button onclick="fetchAndCopyPassword()">비밀번호 복사하기</button>
+</div>
+
+<script>
+async function fetchAndCopyPassword() {
+    try {
+        // Vercel이 제공하는 서버리스 API 주소로 요청을 보냅니다.
+        const response = await fetch('/api/get-password');
+        const data = await response.json();
+        const dailyPassword = data.password;
+
+        // 화면에 표시
+        document.getElementById('password-display').innerText = dailyPassword;
+        
+        // 클립보드에 복사
+        await navigator.clipboard.writeText(dailyPassword);
+        alert("비밀번호가 안전하게 복사되었습니다: " + dailyPassword);
+
+    } catch (error) {
+        console.error("오류 발생:", error);
+        alert("비밀번호를 가져오는데 실패했습니다.");
+    }
+}
+</script>
+
+</body>
+</html>
